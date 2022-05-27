@@ -179,3 +179,102 @@ INSERT INTO [Movies] ([Title], [DirectorId], [CopyrightYear], [CategoryId], [Len
 
 --14--
 
+CREATE DATABASE [CarRental]
+
+CREATE TABLE [Categories](
+			 [Id] INT PRIMARY KEY IDENTITY
+			 ,[CategoryName] NVARCHAR (50) NOT NULL
+			 ,[DailyRate] DECIMAL NOT NULL
+			 ,[WeeklyRate] DECIMAL NOT NULL
+			 ,[MonthlyRate] DECIMAL NOT NULL
+			 ,[WeekendRate] DECIMAL
+)
+
+INSERT INTO [Categories] ([CategoryName], [DailyRate], [WeeklyRate], [MonthlyRate], [WeekendRate])
+	 VALUES				 
+	 ('HATCHBACK', 50,  200, 600, NULL)
+	 ,('MINIVAN', 80,  300, 800, NULL)
+	 ,('SPORT CAR', 100,  800, 2300, NULL)
+
+CREATE TABLE [Cars](
+			 [Id] INT PRIMARY KEY IDENTITY
+			 ,[PlateNumber] NVARCHAR (10) NOT NULL
+			 ,[Manufacturer] NVARCHAR (25)
+			 ,[Model] NVARCHAR (25)
+			 ,[CarYear] CHAR (4) NOT NULL
+			 ,[CategoryId] INT NOT NULL
+			 ,[Doors]CHAR (1) 
+			 ,[Picture] VARBINARY (MAX) 
+			 ,[Condition] NVARCHAR (20)
+			 ,[Available] VARCHAR (5)
+			 ,CHECK([Available] = 'BUSSY' OR [Available] = 'FREE')
+			 ,FOREIGN KEY ([CategoryId])REFERENCES [Categories]([Id])
+)
+
+INSERT INTO [Cars] ([PlateNumber], [Manufacturer], [Model], [CarYear], [CategoryId], [Doors], [Picture], [Condition], [Available])
+	 VALUES
+	 ('P6792PK', 'Reno', 'Scenic', 1998, 2, 5, NULL, 'USED','BUSSY')
+	 ,('CA888KK','VW', 'Golf', 2009, 1, 3, NULL, 'USED','FREE')
+	 ,('K8972PP','Buggatti', 'Divo', 2022, 2, 5, NULL, 'BRAND NEW','FREE')
+
+CREATE TABLE [Employees](
+			 [Id] INT PRIMARY KEY IDENTITY
+			 ,[FirstName] NVARCHAR (50) NOT NULL
+			 ,[LastName] NVARCHAR (50) NOT NULL
+			 ,[Title] NVARCHAR (20) NOT NULL
+			 ,[Notes] NVARCHAR (MAX)
+)
+
+INSERT INTO [Employees] ([FirstName], [LastName], [Title], [Notes])
+	 VALUES
+	 ('Jonkata', 'Borimechkov', 'Junior', NULL)
+	 ,('Iliya', 'Bichmeto', 'Senior', NULL)
+	 ,('Dimitrichko', 'Guzolizov', 'Middle', NULL)
+
+
+CREATE TABLE [Customers](
+			 [Id] INT PRIMARY KEY IDENTITY
+			 ,[DriverLicenceNumber] NVARCHAR (20) NOT NULL
+			 ,[FullName] NVARCHAR (100) NOT NULL
+			 ,[Address]  NVARCHAR (200) NOT NULL
+			 ,[City] NVARCHAR (50) NOT NULL
+			 ,[ZIPCode] VARCHAR (4) NOT NULL
+			 ,[Notes] NVARCHAR (MAX)
+)
+
+INSERT INTO [Customers] ([DriverLicenceNumber], [FullName], [Address], [City], [ZIPCode])
+	 VALUES
+	 ('671234123HH12', 'Peshkata Peshkov', 'Sofia', 'Fakulteta', '1400')
+	 ,('9812734JKSAHS', 'Gospodin Gospodinov', 'Sofia', 'Krystova vada', '1200')
+	 ,('354SDKJFHS128', 'Rachko Rachkov', 'Aytos', 'Komluka', '5400')
+			
+CREATE TABLE [RentalOrders] (
+			 [Id] INT PRIMARY KEY IDENTITY
+			 ,[EmployeeId] INT NOT NULL
+			 ,[CustomerId] INT NOT NULL
+			 ,[CarId] INT NOT NULL
+			 ,[TankLevel] NVARCHAR (10) NOT NULL
+			 ,[KilometrageStart] INT NOT NULL
+			 ,[KilometrageEnd] INT NOT NULL
+			 ,[TotalKilometrage] INT NOT NULL
+			 ,[StartDate] DATE NOT NULL
+			 ,[EndDate] DATE NOT NULL
+			 ,[TotalDays] INT NOT NULL
+			 ,[RateApplied] INT NOT NULL
+			 ,[TaxRate] INT NOT NULL
+			 ,[OrderStatus] NVARCHAR (50 )NOT NULL
+			 ,[Notes] NVARCHAR (MAX)
+			 ,FOREIGN KEY ([EmployeeId]) REFERENCES [Employees](Id)
+			 ,FOREIGN KEY ([CustomerId]) REFERENCES [Customers]([Id])
+			 ,FOREIGN KEY ([CarId])REFERENCES [Cars]([Id])
+)
+
+INSERT INTO [RentalOrders] ([EmployeeId], [CustomerId], [CarId], [TankLevel], [KilometrageStart], [KilometrageEnd], [TotalKilometrage], [StartDate], [EndDate], [TotalDays], [RateApplied], [TaxRate], [OrderStatus])
+	  VALUES
+	  (1, 1, 1, 'Full', 123666, 123667, 1, '12-22-2022', '13-22-2022', 1, 6, 1, 'FINISHED')
+	  ,(2, 2, 2, 'Empty', 123666, 123667, 1, '2022-22-12', '2022-22-13', 1, 6, 1, 'FINISHED')
+	  ,(2, 2, 2, 'Half', 123666, 123667, 1, '2022-22-12', '2022-22-13', 1, 6, 1, 'FINISHED')
+
+	 
+
+
