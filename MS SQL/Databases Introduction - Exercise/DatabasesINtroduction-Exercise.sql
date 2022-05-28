@@ -271,10 +271,174 @@ CREATE TABLE [RentalOrders] (
 
 INSERT INTO [RentalOrders] ([EmployeeId], [CustomerId], [CarId], [TankLevel], [KilometrageStart], [KilometrageEnd], [TotalKilometrage], [StartDate], [EndDate], [TotalDays], [RateApplied], [TaxRate], [OrderStatus])
 	  VALUES
-	  (1, 1, 1, 'Full', 123666, 123667, 1, '12-22-2022', '13-22-2022', 1, 6, 1, 'FINISHED')
-	  ,(2, 2, 2, 'Empty', 123666, 123667, 1, '2022-22-12', '2022-22-13', 1, 6, 1, 'FINISHED')
-	  ,(2, 2, 2, 'Half', 123666, 123667, 1, '2022-22-12', '2022-22-13', 1, 6, 1, 'FINISHED')
+	  (1, 1, 1, 'Full', 123666, 123667, 1, '2022-12-12', '2022-12-12', 1, 6, 1, 'FINISHED')
+	  ,(2, 2, 2, 'Empty', 123666, 123667, 1, '2022-12-12', '2022-10-13', 1, 6, 1, 'FINISHED')
+	  ,(2, 2, 2, 'Half', 123666, 123667, 1, '2022-12-12', '2022-09-13', 1, 6, 1, 'FINISHED')
 
+--15--
+
+CREATE DATABASE [Hotel]
+
+CREATE TABLE [Employees](
+			 [Id] INT PRIMARY KEY IDENTITY
+			 ,[FirstName] NVARCHAR (50) NOT NULL
+			 ,[LastName] NVARCHAR (50) NOT NULL
+			 ,[Title] NVARCHAR (50) NOT NULL
+			 ,[Notes] NVARCHAR (150)
+)
+
+INSERT INTO [Employees] ([FirstName], [LastName], [Title], [Notes])
+	 VALUES				 
+	 ('Johny', 'Cage',  'Midle', NULL)
+	 ,('Fikret', 'Jipsov',  'Junior', NULL)
+	 ,('Kurti', 'Ivanov',  'Senior', NULL)
 	 
 
+CREATE TABLE [Customers](
+			[AccountNumber] VARCHAR(10) NOT NULL
+			,[FirstName]  NVARCHAR (50) NOT NULL
+			,[LastName]  NVARCHAR (50) NOT NULL
+			,[PhoneNumber] VARCHAR(15)
+			,[EmergencyName] NVARCHAR (50)
+			,[EmergencyNumber] VARCHAR (15)
+			,[Notes] NVARCHAR (150)
+)
 
+ALTER TABLE [Customers]
+ADD PRIMARY KEY ([AccountNumber])
+
+INSERT INTO [Customers] ([AccountNumber], [FirstName], [LastName], [PhoneNumber], [EmergencyName], [EmergencyNumber], [Notes])
+	 VALUES
+	 ('1234467890', 'Ivan', 'Ivanov', '0888888888', 'Vancho', '0877777777', NULL)
+	 ,('0123456789', 'Dragan', 'Draganov', '0888123456', 'Vancho', '0877779821', NULL)
+	 ,('1237894560', 'Pencho', 'Penchov', '0888987123', 'Vancho', '0877564321', NULL)
+
+CREATE TABLE [RoomStatus](
+			 [RoomStatus] NVARCHAR (30) PRIMARY KEY
+			 ,[Notes] NVARCHAR (MAX)
+)
+
+INSERT INTO [RoomStatus] ([RoomStatus], [Notes])
+	 VALUES
+	 ('FREE', NULL)
+	 ,('BUSY', NULL)
+	 ,('WILL BE AVAILABLE SOON', NULL)
+
+CREATE TABLE [RoomTypes](
+			 [RoomType] NVARCHAR (20) NOT NULL PRIMARY KEY
+			 ,[Notes] NVARCHAR (MAX)
+)
+
+INSERT INTO [RoomTypes] ([RoomType], [Notes])
+	 VALUES
+	 ('Standart Room', NULL)
+	 ,('Studio', NULL)
+	 ,('Apartmet', NULL)
+			
+CREATE TABLE [BedTypes] (
+			 [BedType] NVARCHAR (50) PRIMARY KEY
+			 ,[Notes] NVARCHAR (MAX)
+)
+
+INSERT INTO [BedTypes] ([BedType], [Notes])
+	 VALUES
+	 ('Two Beds', NULL)
+	 ,('Three Beds', NULL)
+	 ,('Four Beds', NULL)
+
+CREATE TABLE [Rooms] (
+			 [RoomNumber] VARCHAR (1) NOT NULL
+			 ,[RoomType] NVARCHAR (20) NOT NULL
+			 ,[BedType] NVARCHAR (50) NOT NULL
+			 ,[Rate] DECIMAL
+			 ,[RoomStatus] NVARCHAR (30)
+			 ,[Notes] NVARCHAR (MAX)
+			 ,FOREIGN KEY ([RoomType]) REFERENCES [RoomTypes]([RoomType])
+			 ,FOREIGN KEY ([BedType]) REFERENCES [BedTypes]([BedType])
+			 ,FOREIGN KEY ([RoomStatus]) REFERENCES [RoomStatus]([RoomStatus])
+)
+
+INSERT INTO [Rooms] ([RoomNumber], [RoomType], [BedType], [Rate], [RoomStatus], [Notes])
+	 VALUES
+	 ('1', 'Apartmet', 'Four Beds', 6.4, 'BUSY', NULL )
+	 ,('2', 'Standart Room', 'Three Beds', 6.4, 'FREE', NULL )
+	 ,('3', 'Studio', 'Two Beds', 6.4, 'WILL BE AVAILABLE SOON', NULL )
+
+
+CREATE TABLE [Payments]( 
+			 [Id] INT PRIMARY KEY IDENTITY
+			 ,[EmployeeId] INT NOT NULL
+			 ,[PaymentDate] DATE NOT NULL
+			 ,[AccountNumber] VARCHAR(10) NOT NULL
+			 ,[FirstDateOccupied] DATE NOT NULL
+			 ,[LastDateOccupied] DATE NOT NULL
+			 ,[TotalDays] INT NOT NULL
+			 ,[AmountCharged] DECIMAL NOT NULL
+			 ,[TaxRate] DECIMAL NOT NULL
+			 ,[TaxAmount] DECIMAL NOT NULL
+			 ,[PaymentTotal] DECIMAL NOT NULL
+			 ,[Notes] NVARCHAR (MAX)
+			 ,FOREIGN KEY ([EmployeeId]) REFERENCES [Employees]([Id])
+			 ,FOREIGN KEY ([AccountNumber]) REFERENCES [Customers]([AccountNumber])
+)
+
+INSERT INTO [Payments] ([EmployeeId], [PaymentDate], [AccountNumber], [FirstDateOccupied], [LastDateOccupied], [TotalDays], [AmountCharged], [TaxRate], [TaxAmount], [PaymentTotal])
+ 	 VALUES
+	 (1, '2022-10-10', '0123456789', '2022-10-08', '2022-10-10', 2, 155.55, 10, 15.5, 17.05)
+	 ,(2, '2022-10-10', '1234467890', '2022-10-08', '2022-10-10', 2, 200, 10, 20, 220)
+	 ,(3, '2022-10-10', '1237894560', '2022-10-08', '2022-10-10', 2, 80, 10, 8, 88)
+
+CREATE TABLE [Occupancies]( 
+			 [Id] INT PRIMARY KEY IDENTITY
+			 ,[EmployeeId] INT NOT NULL
+			 ,[DateOccupied] DATE NOT NULL
+			 ,[AccountNumber] VARCHAR(10) NOT NULL
+			 ,[RoomNumber] VARCHAR (1) NOT NULL
+			 ,[RateApplied] DECIMAL 
+			 ,[PhoneCharge] DECIMAL
+			 ,[Notes] NVARCHAR (MAX)
+			 ,FOREIGN KEY ([EmployeeId]) REFERENCES [Employees]([Id])
+			 ,FOREIGN KEY ([AccountNumber]) REFERENCES [Customers]([AccountNumber])
+)
+
+INSERT INTO [Occupancies] ([EmployeeId], [DateOccupied], [AccountNumber], [RoomNumber], [RateApplied], [PhoneCharge], [Notes])
+ 	 VALUES
+	 (1, '2022-10-10', '0123456789', 1, NULL, NULL, NULL)
+	 ,(2, '2022-10-10', '0123456789', 2, NULL, NULL, NULL)
+	 ,(3, '2022-10-10', '0123456789', 3, NULL, NULL, NULL)
+
+--16--
+
+CREATE DATABASE [SoftUni]
+
+CREATE TABLE [Towns](
+				[Id] INT PRIMARY KEY IDENTITY
+				,[Name] NVARCHAR (50) NOT NULL
+)
+CREATE TABLE[Addresses](
+			[Id] INT PRIMARY KEY IDENTITY
+			,[AddressText] NVARCHAR (200) NOT NULL
+			,[TownId] INT NOT NULL
+			,FOREIGN KEY ([TownID]) REFERENCES [Towns]([Id])
+)
+
+CREATE TABLE[Departments](
+				[Id] INT PRIMARY KEY IDENTITY
+				,[Name] NVARCHAR (50) NOT NULL
+)
+
+CREATE TABLE[Employees](
+			[Id] INT PRIMARY KEY IDENTITY
+			,[FirstName] NVARCHAR (50) NOT NULL
+			,[MiddleName] NVARCHAR (50) NOT NULL
+			,[LastName] NVARCHAR (50) NOT NULL
+			,[JobTitle] NVARCHAR (50) NOT NULL
+			,[DepartmentId] INT NOT NULL
+			,[HireDate] DATE NOT NULL
+			,[Salary] DECIMAL NOT NULL
+			,[AddressId] INT NOT NULL
+			,FOREIGN KEY ([DepartmentId]) REFERENCES [Departments]([Id])
+			,FOREIGN KEY ([AddressId]) REFERENCES [Addresses]([Id])
+)
+
+--17--
