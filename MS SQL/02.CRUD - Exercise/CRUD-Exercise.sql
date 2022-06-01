@@ -110,3 +110,46 @@ SELECT DISTINCT [JobTitle]
     SELECT TOP(10) *
       FROM [Projects]
   ORDER BY [StartDate], [Name]
+
+--20--
+
+    SELECT TOP(7) [FirstName], [LastName], [HireDate] 
+      FROM [Employees]
+  ORDER BY [HireDate] DESC
+
+--21--
+SELECT * FROM [Employees]
+
+UPDATE [Employees] SET [Salary] = Salary * 1.12
+WHERE [DepartmentID] IN (SELECT [DepartmentID] FROM [Departments]
+WHERE [Name] IN ('Ingineering', 'Tool Design', 'Marketing', 'Information Services'))
+
+SELECT [Salary] FROM [Employees]
+
+--22--
+
+SELECT [PeakName] FROM [Peaks]
+ORDER BY [PeakName]
+
+--23--
+
+   SELECT TOP (30) [CountryName], [Population]
+	 FROM [Countries]
+	WHERE [ContinentCode] = 'EU'
+ ORDER BY [Population] DESC
+		  ,[CountryName]
+
+--24--
+
+SELECT [CountryName], [CountryCode], 
+	CASE
+		WHEN [CurrencyCode] = 'EUR' THEN 'Euro'
+		ELSE 'Not Euro'
+	END AS [Currency]
+FROM [Countries]
+ORDER BY [CountryName]
+
+--25--
+
+  SELECT [Name] FROM [Characters]
+ORDER BY [Name]
