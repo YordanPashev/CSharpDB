@@ -2,13 +2,10 @@
 
 SELECT * FROM [Departments]
 
-GO
-
 --3--
 
 SELECT [Name] FROM [Departments]
 
-GO
 
 --4--
  
@@ -16,15 +13,11 @@ SELECT
 	   [FirstName], [LastName], [Salary]
   FROM [Employees]
 
-  GO
-
 --5--
  
 SELECT 
 	   [FirstName], [MiddleName], [LastName]
   FROM [Employees]
-
-  GO
 
 --6--
 
@@ -33,14 +26,10 @@ ALTER TABLE [Employees]
 	SELECT CONCAT ([FirstName],'.', [LastName], '@softuni.bg')
 	FROM [Employees]
 
-GO
-
 --7--
 
 SELECT DISTINCT [Salary] AS 'Salary'
   FROM [Employees]
-  
-  GO
 
   --8--
 
@@ -48,15 +37,11 @@ SELECT DISTINCT [Salary] AS 'Salary'
     FROM [Employees]
    WHERE [JobTitle] = 'Sales Representative'
 
-  GO
-
 --9--
 
 SELECT [FirstName], [LastName], [JobTitle]
   FROM [Employees]
  WHERE [Salary] BETWEEN 20000 AND 30000
-
-GO
 
 --10--
 
@@ -65,12 +50,63 @@ CONCAT ([FirstName], ' ', [MiddleName], ' ', [LastName], ' ') AS 'Full Name'
   FROM [Employees]
  WHERE [Salary] IN (25000,  14000,  12500, 23600)
 
- GO
-
 --11--
 
  SELECT [FirstName], [LastName] 
    FROM [Employees]
   WHERE [ManagerID] IS NULL
 
- GO
+ --12--
+
+  SELECT [FirstName], [LastName], [Salary]
+    FROM [Employees]
+   WHERE [Salary] > 50000
+ORDER BY [Salary] DESC
+
+--13--
+
+  SELECT TOP (5)[FirstName], [LastName]
+    FROM [Employees]
+ORDER BY [Salary] DESC
+
+--14--
+
+SELECT [FirstName], [LastName]
+  FROM [Employees]
+ WHERE [DepartmentID] != 4
+
+--15--
+
+  SELECT * 
+    FROM [Employees]
+ORDER BY 
+		 [Salary] DESC
+		 ,[FirstName]
+		 ,[LastName] DESC
+		 ,[MiddleName]
+
+--16--
+
+CREATE VIEW V_EmployeesSalaries
+		 AS
+	 SELECT [FirstName], [LastName], [Salary]
+	   FROM [Employees]
+
+--17--
+
+CREATE VIEW V_EmployeeNameJobTitle
+		 AS
+	 SELECT CONCAT([FirstName], ' ', [MiddleName], ' ', [LastName], ' ') AS 'Full Name'
+			,[JobTitle] AS 'Job Title'
+	   FROM [Employees]
+
+--18--
+
+SELECT DISTINCT [JobTitle]
+		   FROM [Employees]
+
+--19--
+
+    SELECT TOP(10) *
+      FROM [Projects]
+  ORDER BY [StartDate], [Name]
