@@ -136,14 +136,14 @@ INSERT INTO [StudentsExams]([StudentID], [ExamID])
 
 CREATE TABLE [Cities](
 			 [CityID] INT PRIMARY KEY
-			 , [Name] NVARCHAR (50)
+			 , [Name] NVARCHAR (50) NOT NULL
 )
 
-CREATE TABLE [Gustomers](
-			 [GustomerID] INT PRIMARY KEY
-			 , [Name] NVARCHAR (50)
+CREATE TABLE [Customers](
+			 [CustomerID] INT PRIMARY KEY
+			 , [Name] NVARCHAR (50) NOT NULL
 			 , [Birthday] DATE
-			 , [CityID] INT FOREIGN KEY ([CityID]) REFERENCES [Cities]([CityID])
+			 , [CityID] INT FOREIGN KEY ([CityID]) REFERENCES [Cities]([CityID]) NOT NULL
 )
 
 CREATE TABLE [ItemTypes](
@@ -157,20 +157,48 @@ CREATE TABLE [Items](
 			 , [ItemTypeID] INT FOREIGN KEY ([ItemTypeID]) REFERENCES [ItemTypes]([ItemTypeID])
 )
 
+CREATE TABLE [Orders](
+			 [OrderID] INT PRIMARY KEY 
+			 , [CustomerID] INT FOREIGN KEY ([CustomerID]) REFERENCES [Customers]([CustomerID])
+)
+
 CREATE TABLE [OrderItems](
-			 [OrderID] INT FOREIGN KEY ([OrderID]) REFERENCES [Orders]([OrderID])
+			 [OrderID] INT  FOREIGN KEY ([OrderID]) REFERENCES [Orders]([OrderID])
 			 , [ItemID] INT FOREIGN KEY ([ItemID]) REFERENCES [Items]([ItemID])
 			 , PRIMARY KEY ([OrderID], [ItemID])
 )
 
-CREATE TABLE [Orders](
-			 [OrderID] INT PRIMARY KEY 
-			 , [GustomerID] INT FOREIGN KEY ([GUstomerID]) REFERENCES [Gustomers]([GustomerID])
+--6--
+
+CREATE TABLE [Majors](
+			 [MajorID] INT PRIMARY KEY
+			 , [Name] NVARCHAR (50) NOT NULL
+) 
+
+CREATE TABLE [Subjects](
+			 [SubjectID] INT PRIMARY KEY
+			 , [SubjectName] NVARCHAR (50) NOT NULL
 )
 
+CREATE TABLE [Students](
+			 [StudentID] INT PRIMARY KEY
+			 , [StudentNumber] INT NOT NULL
+			 , [StudentName] NVARCHAR (50) NOT NULL
+			 , [MajorID] INT FOREIGN KEY REFERENCES [Majors]([MajorID])
+)
 
+CREATE TABLE [Agenda](
+			 [StudentID] INT FOREIGN KEY REFERENCES [Students]([StudentID])
+			 , [SubjectID] INT FOREIGN KEY REFERENCES [Subjects]([SubjectID])
+			 , PRIMARY KEY ([StudentID], [SubjectID])
+)
 
-
+CREATE TABLE [Payments](
+			 [PaymentID] INT PRIMARY KEY
+			 , [PaymentDate] DATE
+			 , [PaymentAmount] DECIMAL (6, 2)
+			 , [StudentID] INT FOREIGN KEY REFERENCES [Students]([StudentID])
+)
 
 --9--
 
