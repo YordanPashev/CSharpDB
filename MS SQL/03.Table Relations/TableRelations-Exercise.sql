@@ -116,6 +116,61 @@ INSERT INTO [StudentsExams]([StudentID], [ExamID])
 			, (3, 103)
 			, (2, 102)
 			, (2, 103)
+--4--
+
+  CREATE TABLE [Teachers](
+			   [TeacherID] INT PRIMARY KEY IDENTITY (101, 1)
+			   , [Name] NVARCHAR (50) NOT NULL
+			   , [ManagerID] INT FOREIGN KEY ([ManagerID]) REFERENCES [Teachers]([TeacherID])
+)
+
+   INSERT INTO [Teachers]([Name], [ManagerID])
+	    VALUES
+			   ('John', NULL)
+			   , ('Maya', 106)
+			   , ('Silvia', 106)
+			   , ('Ted', 105)
+			   , ('Mark', 101)
+			   , ('Greta', 101)
+--5--
+
+CREATE TABLE [Cities](
+			 [CityID] INT PRIMARY KEY
+			 , [Name] NVARCHAR (50)
+)
+
+CREATE TABLE [Gustomers](
+			 [GustomerID] INT PRIMARY KEY
+			 , [Name] NVARCHAR (50)
+			 , [Birthday] DATE
+			 , [CityID] INT FOREIGN KEY ([CityID]) REFERENCES [Cities]([CityID])
+)
+
+CREATE TABLE [ItemTypes](
+			 [ItemTypeID] INT PRIMARY KEY
+			 , [Name] NVARCHAR (50)
+)
+
+CREATE TABLE [Items](
+			 [ItemID] INT PRIMARY KEY
+			 , [Name] NVARCHAR (50) 
+			 , [ItemTypeID] INT FOREIGN KEY ([ItemTypeID]) REFERENCES [ItemTypes]([ItemTypeID])
+)
+
+CREATE TABLE [OrderItems](
+			 [OrderID] INT FOREIGN KEY ([OrderID]) REFERENCES [Orders]([OrderID])
+			 , [ItemID] INT FOREIGN KEY ([ItemID]) REFERENCES [Items]([ItemID])
+			 , PRIMARY KEY ([OrderID], [ItemID])
+)
+
+CREATE TABLE [Orders](
+			 [OrderID] INT PRIMARY KEY 
+			 , [GustomerID] INT FOREIGN KEY ([GUstomerID]) REFERENCES [Gustomers]([GustomerID])
+)
+
+
+
+
 
 --9--
 
