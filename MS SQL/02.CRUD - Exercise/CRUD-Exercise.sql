@@ -31,7 +31,7 @@ ALTER TABLE [Employees]
 SELECT DISTINCT [Salary] AS 'Salary'
   FROM [Employees]
 
-  --8--
+--8--
 
   SELECT *
     FROM [Employees]
@@ -122,7 +122,7 @@ SELECT * FROM [Employees]
 
 UPDATE [Employees] SET [Salary] = Salary * 1.12
 WHERE [DepartmentID] IN (SELECT [DepartmentID] FROM [Departments]
-WHERE [Name] IN ('Ingineering', 'Tool Design', 'Marketing', 'Information Services'))
+WHERE [Name] IN ('Ingineering',ï¿½'Tool Design',ï¿½'Marketing', 'Information Services'))
 
 SELECT [Salary] FROM [Employees]
 
