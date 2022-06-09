@@ -95,4 +95,30 @@ LEFT JOIN [Projects] AS p
        ON p.[ProjectID] = ep.[ProjectID]
 	  AND p.[StartDate] < '2005.01.01'
     WHERE ep.[EmployeeID] = 24 
-    
+
+--9--
+
+  SELECT 
+	     e.[EmployeeID]
+	     , e.[FirstName]
+	     , e.[ManagerID]
+		 , m.[FirstName] AS [ManagerName]
+    FROM [Employees] AS e
+    JOIN [Employees] AS m 
+      ON m.[EmployeeID] = e.[ManagerID]
+   WHERE e.[ManagerID] IN (3, 7)
+ORDER BY e.[EmployeeID]
+
+--10--
+
+  SELECT TOP (50)
+	     e.[EmployeeID]
+	     , CONCAT(e.[FirstName], ' ', e.[LastName])
+		 , CONCAT(m.[FirstName], ' ', m.[LastName]) AS [ManagerName]
+		 , d.[Name] AS [DepartmentName]
+    FROM [Employees] AS e
+    JOIN [Departments] AS d 
+	  ON e.[DepartmentID] = d.[DepartmentID] 
+    JOIN [Employees] AS m 
+      ON m.[EmployeeID] = e.[ManagerID]
+ORDER BY e.[EmployeeID]
