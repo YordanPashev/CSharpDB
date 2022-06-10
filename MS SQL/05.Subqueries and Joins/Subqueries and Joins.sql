@@ -162,3 +162,52 @@ ORDER BY p.[Elevation] DESC
   ) AS m
 
 --14--
+
+   SELECT TOP (5)
+          c.[CountryName]
+		  , r.[RiverName]
+     FROM [Countries] AS c 
+LEFT JOIN [CountriesRivers] AS cr
+	   ON cr.[CountryCode] = c.[CountryCode]
+LEFT JOIN [Rivers] AS r
+	   ON r.[Id] = cr.[RiverId]
+	WHERE c.[ContinentCode] = 'AF'
+ ORDER BY c.[CountryName]
+
+ --15--
+
+ SELECT * FROM [Currencies]
+
+ --16--
+
+   SELECT COUNT(*)
+     FROM [Countries] AS c
+LEFT JOIN [MountainsCountries] AS m  
+       ON m.[CountryCode] = c.[CountryCode]
+	WHERE m.[MountainId] IS NULL
+
+--17--
+
+   SELECT TOP (5) 
+	      sd.[CountryName]
+		  , MAX(sd.[HighestPeakElevation])
+		  , MAX (sd.LongestRiverLength)
+     FROM (
+			SELECT
+					c.[CountryName]
+					, p.[Elevation] AS [HighestPeakElevation]
+					, r.[Length] AS [LongestRiverLength]
+			   FROM [Countries] AS c
+		  LEFT JOIN [CountriesRivers] as cr
+				 ON c.[CountryCode] = cr.[CountryCode] 
+		  LEFT JOIN [Rivers] AS r 
+			     ON cr.[RiverId] = r.[Id]
+		  LEFT JOIN [MountainsCountries] as m
+			     ON c.[CountryCode] = m.[CountryCode] 
+		  LEFT JOIN [Peaks] AS p
+			     ON p.[MountainId] = m.[MountainId]
+		   ) AS sd
+ GROUP BY sd.CountryName
+ ORDER BY MAX(sd.[HighestPeakElevation]) DESC
+		  , MAX(sd.[LongestRiverLength]) DESC
+		  , MAX(sd.CountryName)
