@@ -111,14 +111,54 @@ ORDER BY e.[EmployeeID]
 
 --10--
 
-  SELECT TOP (50)
-	     e.[EmployeeID]
-	     , CONCAT(e.[FirstName], ' ', e.[LastName])
-		 , CONCAT(m.[FirstName], ' ', m.[LastName]) AS [ManagerName]
-		 , d.[Name] AS [DepartmentName]
+    SELECT TOP (50) 
+	       e.[EmployeeID]
+	       , CONCAT(e.[FirstName], ' ', e.[LastName])
+		   , CONCAT(m.[FirstName], ' ', m.[LastName]) AS [ManagerName]
+	   	   , d.[Name] AS [DepartmentName]
+      FROM [Employees] AS e
+      JOIN [Departments] AS d 
+   	    ON e.[DepartmentID] = d.[DepartmentID] 
+ LEFT JOIN [Employees] AS m 
+        ON m.[EmployeeID] = e.[ManagerID]
+  ORDER BY e.[EmployeeID]
+
+--11--
+  SELECT 
+         MIN(a.[AverageSalary]) AS [MinAverageSalary]
+    FROM 
+	(
+  SELECT AVG(e.[Salary]) AS [AverageSalary]
     FROM [Employees] AS e
-    JOIN [Departments] AS d 
-	  ON e.[DepartmentID] = d.[DepartmentID] 
-    JOIN [Employees] AS m 
-      ON m.[EmployeeID] = e.[ManagerID]
-ORDER BY e.[EmployeeID]
+GROUP BY e.[DepartmentId]
+	) AS a
+
+--12--
+
+  SELECT 
+		 mc.[CountryCode]
+		 , m.[MountainRange]
+		 , p.[PeakName]
+		 , p.Elevation
+    FROM [Peaks] AS p
+    JOIN [MountainsCountries] AS mc 
+      ON p.MountainId = mc.MountainId
+    JOIN [Mountains] AS m
+      ON mc.[MountainId] = m.[Id]
+   WHERE mc.[CountryCode] = 'BG'
+     AND p.[Elevation] > 2835
+ORDER BY p.[Elevation] DESC
+
+--13--
+
+ SELECT 
+		m.[CountryCode]
+		, m.[MountainRanges]
+   FROM (SELECT [CountryCode]
+				, COUNT([MountainId]) AS [MountainRanges]
+		   FROM [MountainsCountries]
+           WHERE [CountryCode] IN ('US', 'BG', 'RU')
+		GROUP BY [CountryCode]
+  ) AS m
+
+--14--
