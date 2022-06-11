@@ -222,3 +222,38 @@ LEFT JOIN [MountainsCountries] AS m
 		  , MAX(sd.CountryName)
 
 --18--
+
+   SELECT TOP (5)
+		    rc.[CountryName] AS [Country]
+		    , CASE 
+		   			WHEN rc.[PeakName] IS NULL THEN '(no highest peak)'
+		   			ELSE rc.[PeakName] 
+		       END AS [Highest Peak Name]
+		    , CASE
+		     		WHEN rc.[Elevation] IS NULL THEN 0
+		   			ELSE rc.[Elevation]
+		   	END AS [Highest Peak Elevation]
+		    , CASE 
+		   			WHEN rc.[MountainRange] IS NULL THEN '(no mountain)'
+		   			ELSE rc.[MountainRange]
+		     END AS [Mountain]
+     FROM (
+		   SELECT 
+		     c.[CountryName]
+		     , p.[PeakName]
+		     , p.[Elevation] 
+		   	 , m.[MountainRange]
+		      , DENSE_RANK() OVER (PARTITION BY c.[CountryName] ORDER BY p.[Elevation]) AS peakRank
+		   FROM [Countries] AS c
+	  LEFT JOIN [MountainsCountries] as mc
+             ON c.[CountryCode] = mc.[CountryCode] 
+      LEFT JOIN [Peaks] AS p
+             ON p.[MountainId] = mc.[MountainId]
+      LEFT JOIN [Mountains] AS m
+            ON m.[Id] = mc.[MountainId]
+	   ) AS rc
+	 WHERE rc.[peakRank] = 1  
+  ORDER BY CountryName, [Highest Peak Name]
+
+
+
