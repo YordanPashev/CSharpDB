@@ -6,7 +6,7 @@
 	     , a.[AddressText]
     FROM [Employees] AS e
     JOIN [Addresses] AS a ON a.[AddressID] = e.[AddressID]
-ORDER BY [AddressID]
+ORDER BY e.[AddressID]
 
 --2--
 
@@ -18,8 +18,8 @@ ORDER BY [AddressID]
     FROM [Employees] AS e
     JOIN [Addresses] AS a ON a.[AddressID] = e.[AddressID]
     JOIN [Towns] AS t ON t.[TownId] = a.[TownID]
-ORDER BY [FirstName]
-		 , [LastName]
+ORDER BY e.[FirstName]
+		 , e.[LastName]
 
 --3--
 
@@ -31,7 +31,7 @@ ORDER BY [FirstName]
     FROM [Employees] AS e
     JOIN [Departments] AS d ON d.[DepartmentID] = e.[DepartmentID]
    WHERE d.[Name] = 'Sales'
-ORDER BY [EmployeeID]
+ORDER BY e.[EmployeeID]
 
 --4--
 
@@ -124,6 +124,7 @@ ORDER BY e.[EmployeeID]
   ORDER BY e.[EmployeeID]
 
 --11--
+
   SELECT 
          MIN(a.[AverageSalary]) AS [MinAverageSalary]
     FROM 
@@ -150,16 +151,12 @@ GROUP BY e.[DepartmentId]
 ORDER BY p.[Elevation] DESC
 
 --13--
-
- SELECT 
-		m.[CountryCode]
-		, m.[MountainRanges]
-   FROM (SELECT [CountryCode]
-				, COUNT([MountainId]) AS [MountainRanges]
-		   FROM [MountainsCountries]
-           WHERE [CountryCode] IN ('US', 'BG', 'RU')
-		GROUP BY [CountryCode]
-  ) AS m
+ 
+  SELECT [CountryCode]
+		 , COUNT([MountainId]) AS [MountainRanges]
+    FROM [MountainsCountries]
+   WHERE [CountryCode] IN ('US', 'BG', 'RU')
+GROUP BY [CountryCode]
 
 --14--
 
@@ -176,7 +173,7 @@ LEFT JOIN [Rivers] AS r
 
  --15--
 
- SELECT * FROM [Currencies]
+
 
  --16--
 
