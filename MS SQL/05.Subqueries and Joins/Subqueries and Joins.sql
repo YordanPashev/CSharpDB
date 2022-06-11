@@ -172,9 +172,21 @@ LEFT JOIN [Rivers] AS r
  ORDER BY c.[CountryName]
 
  --15--
-
-
-
+      SELECT 
+			 rc.[ContinentCode]
+			 , rc.[CurrencyCode]
+			 , rc.[CurrencyUsage] AS [CurrencyUsage] 
+	    FROM ( 
+			   SELECT 
+					  c.[ContinentCode]
+					  , c.[CurrencyCode]
+					  , COUNT(c.[CurrencyCode]) AS [CurrencyUsage] 
+					  , DENSE_RANK() OVER (PARTITION BY c.ContinentCode ORDER BY COUNT(c.CurrencyCode) DESC) AS [rank] 
+				 FROM [Countries] AS c
+			 GROUP BY c.[ContinentCode], c.[CurrencyCode]
+			 ) AS  rc
+	WHERE rc.[rank] = 1 
+	  AND rc.[CurrencyUsage] > 1
  --16--
 
    SELECT COUNT(*)
@@ -208,3 +220,5 @@ LEFT JOIN [MountainsCountries] AS m
  ORDER BY MAX(sd.[HighestPeakElevation]) DESC
 		  , MAX(sd.[LongestRiverLength]) DESC
 		  , MAX(sd.CountryName)
+
+--18--
