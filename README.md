@@ -1,7 +1,7 @@
 # CSharpDB
 SoftUni C# DB - May 2022
 
-[**1. Databases Introduction - Exercise**] (https://github.com/YordanPashev/CSharpDB/tree/main/MS%20SQL/01.Databases%20Introduction%20-%20Exercise)
+[**1. Databases Introduction - Exercise**](https://github.com/YordanPashev/CSharpDB/tree/main/MS%20SQL/01.Databases%20Introduction%20-%20Exercise)
 
 [**2. CRUD - Exercise**](https://github.com/YordanPashev/CSharpDB/tree/main/MS%20SQL/02.CRUD%20-%20Exercise)
 
