@@ -13,5 +13,4 @@ SoftUni C# DB - May 2022
 
 [**6. Indices and Data Aggregation - Exercise**](https://github.com/YordanPashev/CSharpDB/tree/main/MS SQL/03.Table Relations)
 
-[**7. **]()
 
