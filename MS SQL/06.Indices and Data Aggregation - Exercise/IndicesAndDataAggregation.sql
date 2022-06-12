@@ -11,7 +11,7 @@ SELECT COUNT(*)
 --3--
 
   SELECT 
-		 wd.[DepositGroup] 
+		 wd.[DepositGroup]  AS [LongestMagicWand]
 		 , MAX(wd.[MagicWandSize])
     FROM [WizzardDeposits] AS wd
 GROUP BY wd.[DepositGroup]
@@ -66,27 +66,22 @@ ORDER BY wd.[MagicWandCreator]
 
 --9--
 
-  SELECT 
-		  CASE 
-			 WHEN wd.[Age] BETWEEN 0 AND 10 THEN '[0-10]'
-			 WHEN wd.[Age] BETWEEN 11 AND 20 THEN '[11-20]'
-			 WHEN wd.[Age] BETWEEN 21 AND 30 THEN '[21-30]'
-			 WHEN wd.[Age] BETWEEN 31 AND 40 THEN '[31-40]'
-			 WHEN wd.[Age] BETWEEN 41 AND 50 THEN '[41-50]'
-			 WHEN wd.[Age] BETWEEN 51 AND 60 THEN '[51-60]'
-			 WHEN wd.[Age] > 60 THEN '[61+]'
-	      END AS [AgeGroups]
-		 , COUNT(*) AS [WizardCount]
-    FROM [WizzardDeposits] as wd
-GROUP BY CASE 
-			 WHEN wd.[Age] BETWEEN 0 AND 10 THEN '[0-10]'
-			 WHEN wd.[Age] BETWEEN 11 AND 20 THEN '[11-20]'
-			 WHEN wd.[Age] BETWEEN 21 AND 30 THEN '[21-30]'
-			 WHEN wd.[Age] BETWEEN 31 AND 40 THEN '[31-40]'
-			 WHEN wd.[Age] BETWEEN 41 AND 50 THEN '[41-50]'
-			 WHEN wd.[Age] BETWEEN 51 AND 60 THEN '[51-60]'
-			 WHEN wd.[Age] > 60 THEN '[61+]'
-	      END 
+  SELECT ag.[AgeGroup]
+         , COUNT(*)
+    FROM (
+		  SELECT 
+				  CASE 
+						 WHEN wd.[Age] BETWEEN 0 AND 10 THEN '[0-10]'
+						 WHEN wd.[Age] BETWEEN 11 AND 20 THEN '[11-20]'
+						 WHEN wd.[Age] BETWEEN 21 AND 30 THEN '[21-30]'
+						 WHEN wd.[Age] BETWEEN 31 AND 40 THEN '[31-40]'
+						 WHEN wd.[Age] BETWEEN 41 AND 50 THEN '[41-50]'
+						 WHEN wd.[Age] BETWEEN 51 AND 60 THEN '[51-60]'
+						 WHEN wd.[Age] > 60 THEN '[61+]'
+				  END AS [AgeGroup]
+		    FROM [WizzardDeposits] as wd
+		  ) AS ag
+GROUP BY [AgeGroup]
 
 --10--
 
@@ -109,6 +104,18 @@ ORDER BY wd.[DepositGroup] DESC
 		 , wd.[IsDepositExpired]
 
 --12--
+
+SELECT 
+	   ABS(SUM(HostGuestQuery.[Guest Wizard Deposit] - HostGuestQuery.[Host Wizard Deposit]))
+	AS [SumDifference]
+  FROM (
+		  SELECT ws.[FirstName] AS [Host Wizard]
+				 , ws.[DepositAmount] AS [Host Wizard Deposit] 
+				 , LEAD(ws.[FirstName]) OVER (ORDER BY [Id]) AS [Guest Wizard]
+				 , LEAD(ws.[DepositAmount]) OVER (ORDER BY[Id]) AS [Guest Wizard Deposit]
+			FROM [WizzardDeposits] AS ws
+	   ) AS HostGuestQuery
+ WHERE [Guest Wizard] IS NOT NULL
 
 
 --13--
@@ -153,3 +160,43 @@ GROUP BY [DepartmentID]
     FROM [Employees] AS e
 GROUP BY e.[DepartmentID] 
   HAVING MAX(e.[Salary]) NOT BETWEEN 30000 AND 70000
+
+ --17--
+
+SELECT COUNT(*) AS [Count]
+  FROM [Employees] AS e
+ WHERE e.[ManagerID] IS NULL
+
+ --18--
+
+ SELECT DISTINCT 
+		[DepartmentID]
+        , d.[Salary]
+   FROM (
+		 SELECT e.[DepartmentID]
+				, [Salary]
+				, [FirstName]
+				, DENSE_RANK() OVER (PARTITION BY e.[DepartmentID] ORDER BY e.[Salary] DESC) AS [ThirdHighestSalary]
+		   FROM [Employees] AS e
+	    ) AS d
+  WHERE d.[ThirdHighestSalary] = 3
+
+ --19--
+
+  SELECT TOP(10)
+		 e.[FirstName]
+		 , e.[LastName]
+		 , e.[DepartmentID]
+    FROM (
+		   SELECT [DepartmentID]
+				  , AVG([Salary]) AS [DepartmentAverageSalary]
+		     FROM [Employees] 
+	     GROUP BY [DepartmentID] 
+         ) AS dg 
+		 , [Employees] AS e
+   WHERE e.DepartmentID = dg.DepartmentID
+     AND [DepartmentAverageSalary] < e.[Salary]
+ORDER By e.[DepartmentID]
+
+
+ 
