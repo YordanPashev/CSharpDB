@@ -23,7 +23,10 @@ CREATE PROC usp_GetTownsStartingWith(@string NVARCHAR(20))
 	   FROM [Towns] AS t
 	  WHERE t.[Name] LIKE @string + '%'
 
-	  EXEC usp_GetTownsStartingWith 'b'
+--4--
+
+
+
 --5--
 
 CREATE FUNCTION ufn_GetSalaryLevel (@salary DECIMAL(18,4))
