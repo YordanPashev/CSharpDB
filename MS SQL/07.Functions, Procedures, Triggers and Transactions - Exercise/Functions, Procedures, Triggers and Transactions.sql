@@ -91,12 +91,70 @@ CREATE FUNCTION ufn_IsWordComprised(@setOfLetters NVARCHAR(50), @word NVARCHAR(5
 		RETURN @result;
 		END
 
+--8--
 
+   CREATE PROC usp_DeleteEmployeesFromDepartment (@departmentId INT) AS
+       DECLARE @empIDsToBeDeleted TABLE( ID INT )
+		
+   INSERT INTO @empIDsToBeDeleted
+	    SELECT e.[EmployeeID]
+		  FROM [Employees] AS e
+		 WHERE e.[DepartmentID] = @departmentId
 
+   ALTER TABLE [Departments]
+  ALTER COLUMN [ManagerID] int NULL
 
+   DELETE FROM [EmployeesProjects]
+         WHERE [EmployeeID] IN (SELECT ID FROM @empIDsToBeDeleted)
 
+		UPDATE [Employees]
+           SET [ManagerID] = NULL
+         WHERE [ManagerID] IN (SELECT ID FROM @empIDsToBeDeleted)
 
+		UPDATE [Departments]
+		   SET [ManagerID] = NULL
+         WHERE [ManagerID] IN (SELECT ID FROM @empIDsToBeDeleted)
 
+   DELETE FROM [Employees]
+         WHERE [EmployeeID] IN (SELECT ID FROM @empIDsToBeDeleted)
+
+   DELETE FROM [Departments]
+         WHERE [DepartmentID] = @departmentId 
+
+		SELECT COUNT(*) AS [Employees Count] FROM Employees AS e
+		  JOIN [Departments] AS d
+		    ON d.[DepartmentID] = e.[DepartmentID]
+         WHERE e.[DepartmentID] = @departmentId
+
+--9--
+
+CREATE PROC usp_GetHoldersFullName AS
+	BEGIN
+		SELECT CONCAT(ah.[FirstName], ' ', ah.[LastName]) AS [Full Name]
+		  FROM [AccountHolders] AS ah
+	END
+
+--10--
+
+ CREATE PROC usp_GetHoldersWithBalanceHigherThan (@minAmount DECIMAL(18,4))
+ AS
+ BEGIN
+	SELECT ah.[FirstName]
+		   , ah.[LastName]
+	  FROM [AccountHolders] AS ah
+	  JOIN (
+			  SELECT SUM([Balance]) AS [HolderTotalBalance]
+			         , [AccountHolderId]
+				FROM [Accounts]
+			GROUP BY [AccountHolderId]	
+		   ) AS a
+	    ON ah.[Id] = a.[AccountHolderId]
+     WHERE a.[HolderTotalBalance] > @minAmount
+  ORDER BY ah.[Firstname]
+		   , ah.[LastName]
+ END
+
+--11--
 --21--
 
 CREATE OR ALTER PROC usp_AssignProject(@emloyeeId INT, @projectID INT)
