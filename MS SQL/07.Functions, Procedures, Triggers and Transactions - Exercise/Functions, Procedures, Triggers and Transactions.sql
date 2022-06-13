@@ -36,8 +36,6 @@ CREATE PROC usp_GetEmployeesFromTown(@town NVARCHAR(50))
 		 ON a.[TownID] = t.[TownID] 
 	  WHERE t.[Name] = @town
 
-	  EXEC usp_GetEmployeesFromTown 'Sofia'
-
 --5--
 
 CREATE FUNCTION ufn_GetSalaryLevel (@salary DECIMAL(18,4))
@@ -61,3 +59,61 @@ BEGIN
 END
 
 --6--
+
+CREATE PROC usp_EmployeesBySalaryLevel(@SalaryType VARCHAR(10))
+		 AS
+	 SELECT e.[FirstName]
+	        , e .[LastName] 
+	   FROM [Employees] AS e
+	  WHERE dbo.ufn_GetSalaryLevel([Salary]) = @SalaryType
+
+--7--
+
+CREATE FUNCTION ufn_IsWordComprised(@setOfLetters NVARCHAR(50), @word NVARCHAR(50))
+	RETURNS BIT
+		     AS 
+		  BEGIN
+		DECLARE @result BIT = 1,
+				@index INT = 1;
+
+		WHILE(@index <= LEN(@word))
+		BEGIN
+			DECLARE @currLetter NVARCHAR (1) = SUBSTRING(@word, @index, 1)
+
+			IF(CHARINDEX(@currLetter, @setOfLetters) = 0)
+			BEGIN
+				SET @result = 0;
+				RETURN @result
+			END
+
+			SET @index += 1
+			END
+		RETURN @result;
+		END
+
+
+
+
+
+
+
+--21--
+
+CREATE OR ALTER PROC usp_AssignProject(@emloyeeId INT, @projectID INT)
+AS
+BEGIN TRANSACTION
+ DECLARE @numberOFprojects INT
+  SELECT @numberOFprojects = 
+		 (SELECT COUNT(*)
+		 FROM [EmployeesProjects] AS e
+		 WHERE e.[EmployeeID] = @emloyeeId)
+	  IF(@numberOFprojects >= 3)
+		BEGIN
+			ROLLBACK
+			RAISERROR ('The employee has too many projects!', 16, 1)
+			RETURN
+		END
+INSERT INTO [EmployeesProjects] (EmployeeID, ProjectID)
+	 VALUES (@emloyeeId, @projectID)
+
+COMMIT
