@@ -25,7 +25,18 @@ CREATE PROC usp_GetTownsStartingWith(@string NVARCHAR(20))
 
 --4--
 
+CREATE PROC usp_GetEmployeesFromTown(@town NVARCHAR(50))
+         AS 
+	 SELECT e.[FirstName]
+			, e.[LastName]
+	   FROM [Employees] AS e
+       JOIN [Addresses] AS a
+	     ON e.[AddressID] = a.[AddressID]
+       JOIN [Towns] AS t
+		 ON a.[TownID] = t.[TownID] 
+	  WHERE t.[Name] = @town
 
+	  EXEC usp_GetEmployeesFromTown 'Sofia'
 
 --5--
 
@@ -49,6 +60,4 @@ BEGIN
 	  RETURN @result
 END
 
-SELECT e.[Salary]
-       , dbo.ufn_GetSalaryLevel(e.[Salary])
-  FROM [Employees] AS e
+--6--
