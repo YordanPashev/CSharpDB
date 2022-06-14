@@ -182,6 +182,19 @@ END
 
 --13--
 
+CREATE FUNCTION ufn_CashInUsersGames (@gameName NVARCHAR(50))
+RETURNS TABLE AS
+RETURN SELECT SUM(rn.[Cash]) AS [SumChas]
+	     FROM (
+		      SELECT ROW_NUMBER() OVER (ORDER BY ug.[Cash] DESC) AS [RowNumber]
+				     , ug.[Cash]
+				     , g.[Id]
+			    FROM [UsersGames] AS ug
+	       LEFT JOIN [Games] as g
+	              On ug.[GameId] = g.[Id]
+	           WHERE g.[Name] = @gameName
+		   ) AS rn
+	 WHERE rn.[RowNumber] % 2 != 0
 
 --21--
 
