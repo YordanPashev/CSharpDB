@@ -155,6 +155,34 @@ CREATE PROC usp_GetHoldersFullName AS
  END
 
 --11--
+
+CREATE FUNCTION ufn_CalculateFutureValue (@initialSum DECIMAL  (18,4), @yearlyInterestRate FLOAT, @years INT)
+RETURNS DECIMAL (18,4)
+AS
+BEGIN  
+	DECLARE @result DECIMAL (18,4)
+	SET @result = @initialSum * (POWER((1 + @yearlyInterestRate), @years))
+	RETURN ROUND(@result, 4)
+END
+
+--12--
+
+CREATE PROC usp_CalculateFutureValueForAccount (@accountID INT, @yearlyInterestRate FLOAT) AS
+BEGIN
+	 SELECT ah.[Id]
+			, ah.[FirstName]
+		    , ah.[LastName]
+			, a.[Balance] AS [Current Balance]
+			, dbo.ufn_CalculateFutureValue(a.[Balance], @yearlyInterestRate, 5) AS [Balance in 5 years]
+	   FROM [AccountHolders] AS ah
+  LEFT JOIN [Accounts] AS a
+	     ON ah.[Id] = a.[Id]  
+	  WHERE ah.[Id] = @accountID
+END
+
+--13--
+
+
 --21--
 
 CREATE OR ALTER PROC usp_AssignProject(@emloyeeId INT, @projectID INT)
