@@ -162,7 +162,6 @@ LEFT JOIN [Journeys] as j
 		  ) AS rjc
 	WHERE rjc.[JobRank] = 2
 
-
 --11--
  
  CREATE FUNCTION dbo.udf_GetColonistsCount(@planetName VARCHAR (30))
@@ -183,8 +182,6 @@ LEFT JOIN [Planets] AS p
  )
  RETURN @result
  END
-
- SELECT dbo.udf_GetColonistsCount('Otroyphus')
 
  --12--
 
@@ -219,8 +216,6 @@ BEGIN
 	END	  
 END
 
-		
-EXEC usp_ChangeJourneyPurpose 2, 'Educational'
 
 
 
