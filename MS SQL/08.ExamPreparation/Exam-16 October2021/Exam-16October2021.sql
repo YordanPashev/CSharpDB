@@ -1,11 +1,3 @@
-CREATE DATABASE CigarShop
-
-GO
-
-USE CigarShop
-
-GO
-
 --1--
 
 CREATE TABLE Sizes(
@@ -210,8 +202,6 @@ BEGIN
 		 RETURN @result
 END
 
-SELECT dbo.udf_ClientWithCigars('Betty')
-
 --12--
 
 CREATE PROC usp_SearchByTaste(@taste NVARCHAR (20)) AS
@@ -233,5 +223,3 @@ BEGIN
 	  ORDER BY s.[Length]
 			   , s.[RingRange] DESC		
 END
-
-EXEC dbo.usp_SearchByTaste 'Woody'
