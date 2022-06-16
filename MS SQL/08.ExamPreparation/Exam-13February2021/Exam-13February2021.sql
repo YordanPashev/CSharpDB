@@ -1,5 +1,3 @@
-CREATE DATABASE Bitbucket
-
 --1--
 
 CREATE TABLE [Users](
