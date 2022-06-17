@@ -15,4 +15,4 @@ SoftUni C# DB - May 2022
 
 [**7. Functions, Procedures, Triggers and Transactions - Exercise**](https://github.com/YordanPashev/CSharpDB/tree/main/MS%20SQL/07.Functions%2C%20Procedures%2C%20Triggers%20and%20Transactions%20-%20Exercise)
 
-[**8. Exam Preparation**](https://github.com/YordanPashev/CSharpDB/tree/main/MS%20SQL/08.ExamPreparation/Exam-8April2021)
+[**8. Exam Preparation**](https://github.com/YordanPashev/CSharpDB/tree/main/MS%20SQL/08.ExamPreparation)
