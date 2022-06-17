@@ -108,7 +108,7 @@ ORDER BY [Size] DESC
      JOIN [Users] AS u
 	   ON i.[AssigneeId] = u.[Id]
  ORDER BY i.[Id] DESC
-		  , i.AssigneeId
+		  , i.[AssigneeId]
 
 --8--
 
