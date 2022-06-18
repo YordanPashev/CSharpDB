@@ -1,9 +1,4 @@
 --1--
-CREATE DATABASE TripService
-
-GO
-
-USE TripService
 
 CREATE TABLE [Cities](
                 [Id] INT PRIMARY KEY IDENTITY
@@ -321,8 +316,3 @@ BEGIN
 			   ; THROW 50002, 'Target room is in another hotel!', 1
 		 END
 END
-
-EXEC usp_SwitchRoom 10, 11
-SELECT RoomId FROM Trips WHERE Id = 10
-EXEC usp_SwitchRoom 10, 7
-EXEC usp_SwitchRoom 10, 8
