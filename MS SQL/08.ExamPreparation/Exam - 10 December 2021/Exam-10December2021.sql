@@ -207,7 +207,7 @@ BEGIN
 			         WHEN f.[TicketPrice] <= 400 THEN 'Low' 
 			         WHEN f.[TicketPrice] BETWEEN 401 AND 1500 THEN 'Medium' 
 			         WHEN f.[TicketPrice] > 1500 THEN 'High' 
-			     END AS [LevelOfTickerPrice]
+			     END AS [LevelOfTicketPrice]
 			   , ac.[Manufacturer]
 			   , ac.[Condition]
 			   , [at].[TypeName]
