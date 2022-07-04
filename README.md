@@ -1,4 +1,4 @@
-SoftUni MS SQL - May 2022
+Contents
 
 [**1. Databases Introduction - Exercise**](https://github.com/YordanPashev/CSharpDB/tree/main/MS%20SQL/01.%20Databases%20Introduction%20-%20Exercise)
 
